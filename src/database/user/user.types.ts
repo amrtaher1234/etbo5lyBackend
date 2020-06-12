@@ -2,7 +2,8 @@ import { Document, Model } from "mongoose";
 
 export interface IUser {
   name: string;
-  role: Number;
+  role: String;
+  token: String;
   email: String;
   password: String;
 }
