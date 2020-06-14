@@ -1,7 +1,6 @@
 import * as express from "express";
 import mealRouter from "./meal.routes";
 import userRouter from "./user.routes";
-import uploadRouter from "./upload.routes";
 import * as jwt from "jsonwebtoken";
 import { UserModel } from "../database/user/user.model";
 const router = express.Router();
@@ -26,5 +25,4 @@ router.use(async (req, res, next) => {
 });
 router.use("/meals", mealRouter);
 router.use("/users", userRouter);
-router.use("/upload", uploadRouter);
 export default router;
