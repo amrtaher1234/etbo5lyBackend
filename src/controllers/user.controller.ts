@@ -46,12 +46,20 @@ export const login = async (
   res: express.Response,
   next: express.NextFunction
 ) => {
+  let errorMessage = "";
   try {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
-    if (!user) return next(new Error("Email does not exist"));
+    if (!user) {
+      errorMessage = "Email not found";
+      throw new Error(errorMessage);
+    }
     const validPassword = await validatePassword(password, user.password);
-    if (!validPassword) return next(new Error("Password is not correct"));
+    console.log(validPassword);
+    if (!validPassword) {
+      errorMessage = "Password not correct";
+      throw new Error(errorMessage);
+    }
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
@@ -66,6 +74,18 @@ export const login = async (
       token: token,
     });
   } catch (error) {
-    next(error);
+    res.status(404).send({ message: errorMessage, status: 404 });
   }
+};
+export const updateRole = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  const id = req.params.id;
+  const newRole = req.body.role;
+  const user = await (
+    await UserModel.findByIdAndUpdate(id, { role: newRole })
+  ).save();
+  res.send({ user: user });
 };

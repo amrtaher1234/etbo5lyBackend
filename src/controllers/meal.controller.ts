@@ -25,6 +25,7 @@ export const addMeal = async function (
 ) {
   const meal = req.body as IMeal;
   try {
+    meal.image = req.file?.path;
     const mealCreated = await (await MealModel.create(meal)).save();
     res.send({ meal: mealCreated });
   } catch (err) {
